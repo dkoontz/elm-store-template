@@ -57,10 +57,10 @@ apiRequestToUrlString request =
             "/api/sessions"
 
         GetSession sessionId _ ->
-            "/api/session/" ++ sessionId
+            "/api/session/" ++ Api.Types.sessionIdToString sessionId
 
         UpdateSession sessionId _ _ ->
-            "/api/session/" ++ sessionId
+            "/api/session/" ++ Api.Types.sessionIdToString sessionId
 
 
 httpErrorToApiError : Http.Error -> ApiError

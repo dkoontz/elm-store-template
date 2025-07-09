@@ -102,7 +102,7 @@ initSessionPage sessionId store shared =
 
                     Messages.EndDateUpdated date ->
                         ( { model | endDate = date }, [] )
-        , view = \_ _ _ -> Html.div [] [ Html.text ("Api.Session " ++ sessionId) ]
+        , view = \_ _ _ -> Html.div [] [ Html.text ("Api.Session " ++ Api.Types.sessionIdToString sessionId) ]
         , init =
             \_ ->
                 { id = sessionId

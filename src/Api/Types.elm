@@ -7,35 +7,40 @@ import Time
 import Types
 
 
-type alias ChallengeId =
-    String
+type ChallengeId
+    = ChallengeId String
 
 
-type alias SessionId =
-    String
+type SessionId
+    = SessionId String
 
 
-type alias TeamId =
-    String
+type TeamId
+    = TeamId String
 
 
-type alias TeamMemberId =
-    String
+type TeamMemberId
+    = TeamMemberId String
 
 
 teamIdToString : TeamId -> String
-teamIdToString teamId =
-    teamId
+teamIdToString (TeamId id) =
+    id
 
 
 sessionIdToString : SessionId -> String
-sessionIdToString sessionId =
-    sessionId
+sessionIdToString (SessionId id) =
+    id
 
 
 challengeIdToString : ChallengeId -> String
-challengeIdToString challengeId =
-    challengeId
+challengeIdToString (ChallengeId id) =
+    id
+
+
+teamMemberIdToString : TeamMemberId -> String
+teamMemberIdToString (TeamMemberId id) =
+    id
 
 
 type alias JoinCode =
@@ -61,21 +66,21 @@ type alias Team =
 teamDecoder : Decode.Decoder Team
 teamDecoder =
     Decode.succeed Team
-        |> Pipeline.required "id" Decode.string
+        |> Pipeline.required "id" (Decode.map TeamId Decode.string)
         |> Pipeline.required "name" Decode.string
         |> Pipeline.required "notes" Decode.string
         |> Pipeline.required "joinCode" Decode.string
-        |> Pipeline.required "members" (Decode.list Decode.string)
+        |> Pipeline.required "members" (Decode.list (Decode.map TeamMemberId Decode.string))
 
 
 teamEncoder : Team -> Encode.Value
 teamEncoder team =
     Encode.object
-        [ ( "id", Encode.string team.id )
+        [ ( "id", Encode.string (teamIdToString team.id) )
         , ( "name", Encode.string team.name )
         , ( "notes", Encode.string team.notes )
         , ( "joinCode", Encode.string team.joinCode )
-        , ( "members", Encode.list Encode.string team.members )
+        , ( "members", Encode.list (teamMemberIdToString >> Encode.string) team.members )
         ]
 
 
@@ -91,7 +96,7 @@ type alias Session =
 sessionDecoder : Decode.Decoder Session
 sessionDecoder =
     Decode.succeed Session
-        |> Pipeline.required "id" Decode.string
+        |> Pipeline.required "id" (Decode.map SessionId Decode.string)
         |> Pipeline.required "startDate" Decode.string
         |> Pipeline.required "endDate" Decode.string
         |> Pipeline.required "notes" Decode.string
@@ -101,7 +106,7 @@ sessionDecoder =
 sessionEncoder : Session -> Encode.Value
 sessionEncoder session =
     Encode.object
-        [ ( "id", Encode.string session.id )
+        [ ( "id", Encode.string (sessionIdToString session.id) )
         , ( "startDate", Encode.string session.startDate )
         , ( "endDate", Encode.string session.endDate )
         , ( "notes", Encode.string session.notes )

@@ -34,8 +34,8 @@ type alias Store =
 initialStore : Store
 initialStore =
     { allSessions = RemoteData.NotAsked
-    , sessionsById = CDict.empty identity identity
-    , teams = CDict.empty identity identity
+    , sessionsById = CDict.empty Api.Types.sessionIdToString Api.Types.SessionId
+    , teams = CDict.empty Api.Types.teamIdToString Api.Types.TeamId
     }
 
 

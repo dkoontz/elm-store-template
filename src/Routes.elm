@@ -18,7 +18,7 @@ routeToUrlString route =
             "/sessions"
 
         SessionRoute sessionId ->
-            "/session/" ++ sessionId
+            "/session/" ++ Api.Types.sessionIdToString sessionId
 
 
 urlToRoute : Url.Url -> Maybe Route
@@ -28,7 +28,7 @@ urlToRoute url =
             Just SessionsRoute
 
         [ "session", sessionId ] ->
-            Just (SessionRoute sessionId)
+            Just (SessionRoute (Api.Types.SessionId sessionId))
 
         _ ->
             Nothing
