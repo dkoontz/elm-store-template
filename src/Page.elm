@@ -1,6 +1,7 @@
 module Page exposing (..)
 
 import Api
+import Api.Types
 import Effect
 import Html
 import Messages
@@ -77,7 +78,7 @@ initSessionsPage store shared =
         }
 
 
-initSessionPage : Types.SessionId -> Store.Store -> Types.Shared -> Page
+initSessionPage : Api.Types.SessionId -> Store.Store -> Types.Shared -> Page
 initSessionPage sessionId store shared =
     SessionPage
         { requestedData = \_ -> [ Store.GetSessionsData ]
@@ -144,10 +145,10 @@ pageToString page =
 
 
 type alias SessionPageModel =
-    { id : Types.SessionId
+    { id : Api.Types.SessionId
     , startDate : Types.Date
     , endDate : Types.Date
-    , teams : List Types.TeamId
+    , teams : List Api.Types.TeamId
     , notes : String
     }
 

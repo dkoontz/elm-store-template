@@ -1,6 +1,7 @@
 module Messages exposing (..)
 
 import Api
+import Api.Types
 import Browser
 import Types
 import Url
@@ -14,8 +15,8 @@ type Msg
 
 
 type StoreMsg
-    = GotSessions (Result Api.ApiError (List Api.Session))
-    | GotSession (Result Api.ApiError Api.Session)
+    = GotSessions (Result Api.ApiError (List Api.Types.Session))
+    | GotSession (Result Api.ApiError Api.Types.Session)
     | SessionUpdated (Result Api.ApiError ())
 
 
@@ -26,29 +27,29 @@ type PageMsg
 
 type SessionPageMsg
     = NotesUpdated String
-    | TeamAdded Types.TeamId
-    | TeamRemoved Types.TeamId
+    | TeamAdded Api.Types.TeamId
+    | TeamRemoved Api.Types.TeamId
     | StartDateUpdated Types.Date
     | EndDateUpdated Types.Date
 
 
 type SessionsPageMsg
-    = NavigateToSession Types.SessionId
-    | DeleteSession Types.SessionId
-    | DuplicateSession Types.SessionId
+    = NavigateToSession Api.Types.SessionId
+    | DeleteSession Api.Types.SessionId
+    | DuplicateSession Api.Types.SessionId
 
 
 sessionsPageMessageToString : SessionsPageMsg -> String
 sessionsPageMessageToString msg =
     case msg of
         NavigateToSession sessionId ->
-            "NavigateToSession " ++ Types.sessionIdToString sessionId
+            "NavigateToSession " ++ Api.Types.sessionIdToString sessionId
 
         DeleteSession sessionId ->
-            "DeleteSession " ++ Types.sessionIdToString sessionId
+            "DeleteSession " ++ Api.Types.sessionIdToString sessionId
 
         DuplicateSession sessionId ->
-            "DuplicateSession " ++ Types.sessionIdToString sessionId
+            "DuplicateSession " ++ Api.Types.sessionIdToString sessionId
 
 
 sessionPageMessageToString : SessionPageMsg -> String
@@ -58,10 +59,10 @@ sessionPageMessageToString msg =
             "NotesUpdated: " ++ notes
 
         TeamAdded teamId ->
-            "TeamAdded: " ++ Types.teamIdToString teamId
+            "TeamAdded: " ++ Api.Types.teamIdToString teamId
 
         TeamRemoved teamId ->
-            "TeamRemoved: " ++ Types.teamIdToString teamId
+            "TeamRemoved: " ++ Api.Types.teamIdToString teamId
 
         StartDateUpdated date ->
             "StartDateUpdated: " ++ Types.dateToString date

@@ -1,6 +1,7 @@
 module Store exposing (..)
 
 import Api
+import Api.Types
 import CDict exposing (CDict)
 import Effect
 import Messages
@@ -10,11 +11,11 @@ import Types
 
 type DataRequest
     = GetSessionsData
-    | GetSessionData Types.SessionId
+    | GetSessionData Api.Types.SessionId
     | GetTeamsData
-    | GetTeamData Types.TeamId
+    | GetTeamData Api.Types.TeamId
     | GetChallengesData
-    | GetChallengeData Types.ChallengeId
+    | GetChallengeData Api.Types.ChallengeId
 
 
 type alias ApiData a =
@@ -22,9 +23,9 @@ type alias ApiData a =
 
 
 type alias Store =
-    { allSessions : ApiData (List Api.Session)
-    , sessionsById : CDict Types.SessionId (ApiData Api.Session)
-    , teams : CDict Types.TeamId (ApiData Api.Team)
+    { allSessions : ApiData (List Api.Types.Session)
+    , sessionsById : CDict Api.Types.SessionId (ApiData Api.Types.Session)
+    , teams : CDict Api.Types.TeamId (ApiData Api.Types.Team)
 
     -- , challenges : CDict Api.ChallengeId (ApiData Challenge)
     }

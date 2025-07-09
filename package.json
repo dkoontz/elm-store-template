@@ -4,18 +4,30 @@
   "main": "index.js",
   "scripts": {
     "start": "npx vite",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "review": "elm-review",
+    "review:fix": "elm-review --fix"
   },
   "author": "",
   "license": "ISC",
   "type": "module",
-  "description": "",
+  "description": "This template provides a structured foundation for building Elm applications using several architectural patterns that promote maintainability, type safety, and clear separation of concerns.",
   "devDependencies": {
     "elm-format": "^0.8.8",
+    "elm-review": "^2.13.3",
     "vite": "^7.0.2",
     "vite-plugin-elm-watch": "^1.4.4"
   },
   "dependencies": {
     "elm-debug-transformer": "^1.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dkoontz/elm-store-template.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/dkoontz/elm-store-template/issues"
+  },
+  "homepage": "https://github.com/dkoontz/elm-store-template#readme"
 }

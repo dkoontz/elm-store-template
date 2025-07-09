@@ -1,13 +1,14 @@
 module Routes exposing (..)
 
 import Api
+import Api.Types
 import Types
 import Url
 
 
 type Route
     = SessionsRoute
-    | SessionRoute Types.SessionId
+    | SessionRoute Api.Types.SessionId
 
 
 routeToUrlString : Route -> String
