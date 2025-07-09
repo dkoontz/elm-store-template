@@ -2,7 +2,6 @@ module Messages exposing (..)
 
 import Api
 import Browser
-import Http
 import Types
 import Url
 
@@ -15,9 +14,9 @@ type Msg
 
 
 type StoreMsg
-    = GotSessions (Result Http.Error (List Api.Session))
-    | GotSession (Result Http.Error Api.Session)
-    | SessionUpdated (Result Http.Error ())
+    = GotSessions (Result Api.ApiError (List Api.Session))
+    | GotSession (Result Api.ApiError Api.Session)
+    | SessionUpdated (Result Api.ApiError ())
 
 
 type PageMsg

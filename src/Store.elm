@@ -3,7 +3,6 @@ module Store exposing (..)
 import Api
 import CDict exposing (CDict)
 import Effect
-import Http
 import Messages
 import RemoteData
 import Types
@@ -18,12 +17,16 @@ type DataRequest
     | GetChallengeData Types.ChallengeId
 
 
-type alias Store =
-    { allSessions : RemoteData.WebData (List Api.Session)
-    , sessionsById : CDict Types.SessionId (RemoteData.WebData Api.Session)
-    , teams : CDict Types.TeamId (RemoteData.WebData Api.Team)
+type alias ApiData a =
+    RemoteData.RemoteData Api.ApiError a
 
-    -- , challenges : CDict Api.ChallengeId (RemoteData.WebData Challenge)
+
+type alias Store =
+    { allSessions : ApiData (List Api.Session)
+    , sessionsById : CDict Types.SessionId (ApiData Api.Session)
+    , teams : CDict Types.TeamId (ApiData Api.Team)
+
+    -- , challenges : CDict Api.ChallengeId (ApiData Challenge)
     }
 
 
@@ -38,21 +41,21 @@ initialStore =
 processStoreMessage : Messages.StoreMsg -> Store -> ( Store, List Effect.Effect )
 processStoreMessage storeMsg store =
     let
-        formatHttpError httpError =
-            case httpError of
-                Http.BadUrl url ->
+        formatApiError apiError =
+            case apiError of
+                Api.BadUrl url ->
                     "Bad URL: " ++ url
 
-                Http.Timeout ->
+                Api.Timeout ->
                     "Request timed out"
 
-                Http.NetworkError ->
+                Api.NetworkError ->
                     "Network error occurred"
 
-                Http.BadStatus status ->
+                Api.BadStatus status ->
                     "Bad status: " ++ String.fromInt status
 
-                Http.BadBody body ->
+                Api.BadBody body ->
                     "Bad body: " ++ body
     in
     case storeMsg of
@@ -68,7 +71,7 @@ processStoreMessage storeMsg store =
 
                 Err error ->
                     ( { store | allSessions = RemoteData.Failure error }
-                    , [ Effect.HandleError (Effect.DataLoadFailure { request = "GetSessions", error = formatHttpError error })
+                    , [ Effect.HandleError (Effect.DataLoadFailure { request = "GetSessions", error = formatApiError error })
                       ]
                     )
 

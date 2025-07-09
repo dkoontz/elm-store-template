@@ -8,10 +8,37 @@ import Time
 import Types
 
 
+type ApiError
+    = BadUrl String
+    | Timeout
+    | NetworkError
+    | BadStatus Int
+    | BadBody String
+
+
+httpErrorToApiError : Http.Error -> ApiError
+httpErrorToApiError httpError =
+    case httpError of
+        Http.BadUrl url ->
+            BadUrl url
+
+        Http.Timeout ->
+            Timeout
+
+        Http.NetworkError ->
+            NetworkError
+
+        Http.BadStatus status ->
+            BadStatus status
+
+        Http.BadBody body ->
+            BadBody body
+
+
 type ApiRequest msgToSendOnCompletion
-    = GetSessions (Result Http.Error (List Session) -> msgToSendOnCompletion)
-    | GetSession Types.SessionId (Result Http.Error Session -> msgToSendOnCompletion)
-    | UpdateSession Types.SessionId Session (Result Http.Error () -> msgToSendOnCompletion)
+    = GetSessions (Result ApiError (List Session) -> msgToSendOnCompletion)
+    | GetSession Types.SessionId (Result ApiError Session -> msgToSendOnCompletion)
+    | UpdateSession Types.SessionId Session (Result ApiError () -> msgToSendOnCompletion)
 
 
 processApiRequest : ApiRequest msgToSendOnCompletion -> Cmd msgToSendOnCompletion
@@ -20,20 +47,20 @@ processApiRequest request =
         GetSessions msgHandler ->
             Http.get
                 { url = apiRequestToUrlString request
-                , expect = Http.expectJson msgHandler (Decode.list sessionDecoder)
+                , expect = Http.expectJson (Result.mapError httpErrorToApiError >> msgHandler) (Decode.list sessionDecoder)
                 }
 
         GetSession sessionId msgHandler ->
             Http.get
                 { url = apiRequestToUrlString request
-                , expect = Http.expectJson msgHandler sessionDecoder
+                , expect = Http.expectJson (Result.mapError httpErrorToApiError >> msgHandler) sessionDecoder
                 }
 
         UpdateSession sessionId session msgHandler ->
             Http.post
                 { url = apiRequestToUrlString request
                 , body = sessionEncoder session |> Http.jsonBody
-                , expect = Http.expectWhatever msgHandler
+                , expect = Http.expectWhatever (Result.mapError httpErrorToApiError >> msgHandler)
                 }
 
 
